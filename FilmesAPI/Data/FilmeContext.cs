@@ -16,7 +16,7 @@ namespace FilmesAPI.Data
             
         }
 
-        public DbSet<Filme> Filmes { get; set;}
+        public DbSet<Filme> Filmes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)  // DEFININDO ONDE SE ENCONTRA E QUAL A STRING DE CONEXÃO
         {
