@@ -9,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace FilmesAPI.Data
 {
-    public class FilmeContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public FilmeContext(DbContextOptions<FilmeContext> opt) : base(opt) // PASSA O PARAMETRO opt PARA O CONSTRUTOR DA CLASSE BASE(DbContext)
+        public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt) // PASSA O PARAMETRO opt PARA O CONSTRUTOR DA CLASSE BASE(DbContext)
         {
             
         }
 
         public DbSet<Filme> Filmes { get; set; }
+        public DbSet<Cinema> Cinemas { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)  // DEFININDO ONDE SE ENCONTRA E QUAL A STRING DE CONEXÃO
         {

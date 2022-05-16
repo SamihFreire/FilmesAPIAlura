@@ -15,10 +15,10 @@ namespace FilmesAPI.Controllers
     public class FilmeController : ControllerBase
     {
 
-        private FilmeContext _context;
+        private AppDbContext _context;
         private IMapper _mapper;
 
-        public FilmeController(FilmeContext context, IMapper mapper)
+        public FilmeController(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper  = mapper;
@@ -56,7 +56,7 @@ namespace FilmesAPI.Controllers
             return NotFound();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}")] //VERBO DE ATUALIZAÇÃO
         public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);

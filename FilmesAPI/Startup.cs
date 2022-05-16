@@ -33,7 +33,7 @@ namespace FilmesAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
             });
-            services.AddDbContext<FilmeContext>(option => option.UseSqlServer(Configuration.GetConnectionString("FilmeConnection"))); //CONFIGURANDO O CAMINHO DA STRING DE CONEXÃO
+            services.AddDbContext<AppDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("FilmeConnection"))); //CONFIGURANDO O CAMINHO DA STRING DE CONEXÃO
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //UTILIZANDO O DOMINIO DA APLICAÇÃO COM AutoMapper (Onde este realiza uma conversão automática de um tipo para o outro)(FilmeProfile.cs foi configurado a CreateMap());
         }
 
