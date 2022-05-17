@@ -16,6 +16,14 @@ namespace FilmesAPI.Data
             
         }
 
+        protected override void OnModelCreating(ModelBuilder builder) //EXPLICITANDO NO MOMENTO DE CRIAÇÃO DO MODELO VAI SER FEITAS ALGUMAS DEFINIÇÕES
+        {
+            builder.Entity<Endereco>()              //CONSTRUINDO A ENTIDADE ENDERECO 
+                .HasOne(endereco => endereco.Cinema)//DEFININDO QUE ENDENREÇO REFENCIA CINEMA
+                .WithOne(cinema => cinema.Endereco)//DEFININDO QUE CINEMA REFERNCIA ENDEREÇO
+                .HasForeignKey<Cinema>(cinema => cinema.EnderecoId);//DEFININDO QUE A CHAVE ESTRANGEIRA SE ECONTRA EM CINEMA, ONDE ESTA FK É EnderecoId
+        }
+
         public DbSet<Filme> Filmes { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
