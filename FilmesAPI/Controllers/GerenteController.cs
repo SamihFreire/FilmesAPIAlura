@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("[controller")]
+    [Route("[controller]")]
     public class GerenteController : ControllerBase
     {
         private AppDbContext _context;
@@ -24,20 +24,30 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdicionaGerente([FromBody] CreateGerenteDto gerenteDto)
+        public IActionResult AdicionaGerente(CreateGerenteDto gerenteDto)
         {
             Gerente gerente = _mapper.Map<Gerente>(gerenteDto);
 
             _context.Gerente.Add(gerente);
             _context.SaveChanges();
 
-            return CreatedAction(nameof())
+            return CreatedAtAction(nameof(RecuperaGerentesPorId), new { id = gerente.Id }, gerente);
         }
 
-        public IEnumerable RecuperaGerentePorId(int id)
+        [HttpGet("{id}")]
+        public IActionResult RecuperaGerentesPorId(int id)
         {
+            Gerente gerente = _context.Gerente.FirstOrDefault(gerente => gerente.Id == id);
+            if(gerente != null)
+            {
+                ReadGerenteDto gerenteDto = _mapper.Map<ReadGerenteDto>(gerente);
 
+                return Ok(gerenteDto);
+            }
+            return NotFound();
         }
+
+
 
     }
 }

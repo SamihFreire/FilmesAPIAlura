@@ -22,6 +22,11 @@ namespace FilmesAPI.Data
                 .HasOne(endereco => endereco.Cinema)//DEFININDO QUE ENDENREÇO REFENCIA CINEMA
                 .WithOne(cinema => cinema.Endereco)//DEFININDO QUE CINEMA REFERNCIA ENDEREÇO
                 .HasForeignKey<Cinema>(cinema => cinema.EnderecoId);//DEFININDO QUE A CHAVE ESTRANGEIRA SE ECONTRA EM CINEMA, ONDE ESTA FK É EnderecoId
+
+            builder.Entity<Cinema>()
+                .HasOne(cinema => cinema.Gerente)
+                .WithMany(gerente => gerente.Cinemas) //ESTABELECENDO REALÇÃO 1 PARA MUITOS 1:N
+                .HasForeignKey(cinema => cinema.GerenteId);   
         }
 
         public DbSet<Filme> Filmes { get; set; }
