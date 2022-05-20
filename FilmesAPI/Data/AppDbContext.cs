@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -26,13 +27,25 @@ namespace FilmesAPI.Data
             builder.Entity<Cinema>()
                 .HasOne(cinema => cinema.Gerente)
                 .WithMany(gerente => gerente.Cinemas) //ESTABELECENDO REALÇÃO 1 PARA MUITOS 1:N
-                .HasForeignKey(cinema => cinema.GerenteId);   
+                .HasForeignKey(cinema => cinema.GerenteId);
+
+            builder.Entity<Sesssao>()
+                .HasOne(sessao => sessao.Filme)
+                .WithMany(Filme => Filme.Sessoes)
+                .HasForeignKey(sessao => sessao.FilmeId);
+                                                                //CRIANDO RELAÇÃO N:N ENTRE FILME E CINEMA POR MEIO DA TABELA SESSAO
+            builder.Entity<Sesssao>()
+                .HasOne(sessao => sessao.Cinema)
+                .WithMany(cinema => cinema.Sessoes)
+                .HasForeignKey(sessao => sessao.CinemaId);
         }
+
 
         public DbSet<Filme> Filmes { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Gerente> Gerente { get; set; }
+        public DbSet<Sesssao> Sessao { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)  // DEFININDO ONDE SE ENCONTRA E QUAL A STRING DE CONEXÃO
         {
