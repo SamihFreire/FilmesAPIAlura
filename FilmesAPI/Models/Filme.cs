@@ -20,6 +20,7 @@ namespace FilmesAPI.Models
 
         [Range(1,600, ErrorMessage = "A duração deve ter no minimo 1min e no máximo 600min")] // Range de duração do filme
         public int Duracao { get; set; }
-        public virtual List<Sesssao> Sessoes{ get; set; }
+        public int ClassificacaoEtaria { get; set; }
+        public virtual List<Sessao> Sessoes{ get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +24,7 @@ namespace FilmesAPI.Data.Dtos
         
         [Range(1, 600, ErrorMessage = "A duração deve ter no minimo 1min e no máximo 600min")] // Range de duração do filme
         public int Duracao { get; set; }
+        public int ClassificacaoEtaria { get; set; }
 
         public DateTime HoraDaConsulta { get; set; }
     }

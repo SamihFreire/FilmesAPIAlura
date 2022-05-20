@@ -29,12 +29,12 @@ namespace FilmesAPI.Data
                 .WithMany(gerente => gerente.Cinemas) //ESTABELECENDO REALÇÃO 1 PARA MUITOS 1:N
                 .HasForeignKey(cinema => cinema.GerenteId);
 
-            builder.Entity<Sesssao>()
+            builder.Entity<Sessao>()
                 .HasOne(sessao => sessao.Filme)
                 .WithMany(Filme => Filme.Sessoes)
                 .HasForeignKey(sessao => sessao.FilmeId);
                                                                 //CRIANDO RELAÇÃO N:N ENTRE FILME E CINEMA POR MEIO DA TABELA SESSAO
-            builder.Entity<Sesssao>()
+            builder.Entity<Sessao>()
                 .HasOne(sessao => sessao.Cinema)
                 .WithMany(cinema => cinema.Sessoes)
                 .HasForeignKey(sessao => sessao.CinemaId);
@@ -45,7 +45,7 @@ namespace FilmesAPI.Data
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Gerente> Gerente { get; set; }
-        public DbSet<Sesssao> Sessao { get; set; }
+        public DbSet<Sessao> Sessao { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)  // DEFININDO ONDE SE ENCONTRA E QUAL A STRING DE CONEXÃO
         {

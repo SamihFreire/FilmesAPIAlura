@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FilmesAPI.Models
 {
-    public class Sesssao
+    public class Sessao
     {
         [Key]
         [Required]
