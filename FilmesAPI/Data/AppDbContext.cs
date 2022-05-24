@@ -31,7 +31,7 @@ namespace FilmesAPI.Data
 
             builder.Entity<Sessao>()
                 .HasOne(sessao => sessao.Filme)
-                .WithMany(Filme => Filme.Sessoes)
+                .WithMany(filme => filme.Sessoes)
                 .HasForeignKey(sessao => sessao.FilmeId);
                                                                 //CRIANDO RELAÇÃO N:N ENTRE FILME E CINEMA POR MEIO DA TABELA SESSAO
             builder.Entity<Sessao>()
@@ -44,8 +44,8 @@ namespace FilmesAPI.Data
         public DbSet<Filme> Filmes { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
-        public DbSet<Gerente> Gerente { get; set; }
-        public DbSet<Sessao> Sessao { get; set; }
+        public DbSet<Gerente> Gerentes { get; set; }
+        public DbSet<Sessao> Sessoes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)  // DEFININDO ONDE SE ENCONTRA E QUAL A STRING DE CONEXÃO
         {

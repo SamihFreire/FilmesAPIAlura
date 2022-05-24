@@ -35,9 +35,26 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet] //Verbo de recebimiento
-        public IEnumerable<Filme> RecuperaFilmes()
+        public IActionResult RecuperaFilmes([FromQuery] int ? classificacaoEtaria = null) //recebendo um Query Parameters na requisição pelo postMan ex.: https://localhost:5001/filme?classificacaoEtaria=6
         {
-            return _context.Filmes;
+            List<Filme> filmes;
+            if(classificacaoEtaria == null)
+            {
+                filmes = _context.Filmes.ToList();
+            }
+            else
+            {
+                filmes = _context
+                    .Filmes.Where(filme => filme.ClassificacaoEtaria <= classificacaoEtaria).ToList();
+            }
+            if(filmes != null)
+            {
+                List<ReadFilmeDto> readDto = _mapper.Map<List<ReadFilmeDto>>(filmes);
+                return Ok(readDto);
+            }
+            return NotFound();                            
+            
+            //return _context.Filmes;
         }
 
 

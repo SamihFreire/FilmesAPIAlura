@@ -12,12 +12,12 @@ namespace FilmesAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SessaoControle : ControllerBase
+    public class SessaoController : ControllerBase
     {
         private AppDbContext _context;
         private IMapper _mapper;
 
-        public SessaoControle(AppDbContext context, IMapper mapper)
+        public SessaoController(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -27,17 +27,16 @@ namespace FilmesAPI.Controllers
         public IActionResult AdicionaSessao(CreateSessaoDto dto)
         {
             Sessao sessao = _mapper.Map<Sessao>(dto);
-            _context.Sessao.Add(sessao);
+            _context.Sessoes.Add(sessao);
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(RecuperaSessoesPorId), new { Id = sessao.Id }, sessao);
-            
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperaSessoesPorId(int id)
         {
-            Sessao sessao = _context.Sessao.FirstOrDefault(sessao => sessao.Id == id);
+            Sessao sessao = _context.Sessoes.FirstOrDefault(sessao => sessao.Id == id);
 
             if(sessao != null)
             {
