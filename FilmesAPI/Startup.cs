@@ -1,4 +1,5 @@
 using FilmesAPI.Data;
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +36,10 @@ namespace FilmesAPI
             });
             services.AddDbContext<AppDbContext>(option => option.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("FilmeConnection"))); //CONFIGURANDO O CAMINHO DA STRING DE CONEXÃO / UseLazyLoadingProxies() responsavel na consulta das informações que existentes na relação de uma tabela com outra/ É NECESSARIO DEFINIR O MÉTODO COMO VIRTUAL PARA Q O LAZY REALLIZE O OVERRIDE
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //UTILIZANDO O DOMINIO DA APLICAÇÃO COM AutoMapper (Onde este realiza uma conversão automática de um tipo para o outro)(FilmeProfile.cs foi configurado a CreateMap());
+            
+            //NECESSARIO ADICIONAR O services.AddScoped<ControllerService, ControllerService>(), PARA IDENTIFICAR A COMUNICAÇÃO ENTRE CLASSE CONTROLLER E SERVICES
+            services.AddScoped<FilmeService, FilmeService>();
+            services.AddScoped<CinemaService, CinemaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

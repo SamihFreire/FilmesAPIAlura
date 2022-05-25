@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,45 +15,30 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-
-        private AppDbContext _context;
-        private IMapper _mapper;
-
-        public FilmeController(AppDbContext context, IMapper mapper)
+        private FilmeService _filmeService;
+        public FilmeController(FilmeService filmeService)
         {
-            _context = context;
-            _mapper  = mapper;
+            _filmeService = filmeService;
         }
 
         [HttpPost] //Verbo de criação
         public IActionResult AdionaFilme([FromBody] CreateFilmeDto filmeDto) // [FROMBODY] indica que o filme vem atraves do corpo da requisição
         {
-            Filme filme = _mapper.Map<Filme>(filmeDto); //UTILIZANDO AUTOMAPPER PARA CONVERTER filmeDto para o tipo Filme
+            ReadFilmeDto readDto = _filmeService.AdicionaFilme(filmeDto);
 
-            _context.Filmes.Add(filme);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(RecuperaFilmesPorId), new {id = filme.Id}, filme);  //O CreatedAction retorna que pode ser recuperado pelo metodo RecuperaFilmesPorId, com id passado e o recurso filmes
+            return CreatedAtAction(nameof(RecuperaFilmesPorId), new {id = readDto.Id}, readDto);  //O CreatedAction retorna que pode ser recuperado pelo metodo RecuperaFilmesPorId, com id passado e o recurso filmes
         }
 
         [HttpGet] //Verbo de recebimiento
         public IActionResult RecuperaFilmes([FromQuery] int ? classificacaoEtaria = null) //recebendo um Query Parameters na requisição pelo postMan ex.: https://localhost:5001/filme?classificacaoEtaria=6
         {
-            List<Filme> filmes;
-            if(classificacaoEtaria == null)
+            List<ReadFilmeDto> readDto = _filmeService.RecuperaFilmes(classificacaoEtaria);
+            if(readDto == null)
             {
-                filmes = _context.Filmes.ToList();
-            }
-            else
-            {
-                filmes = _context
-                    .Filmes.Where(filme => filme.ClassificacaoEtaria <= classificacaoEtaria).ToList();
-            }
-            if(filmes != null)
-            {
-                List<ReadFilmeDto> readDto = _mapper.Map<List<ReadFilmeDto>>(filmes);
-                return Ok(readDto);
-            }
-            return NotFound();                            
+                return NotFound();                            
+            }        
+            return Ok(readDto);
+                        
             
             //return _context.Filmes;
         }
@@ -61,14 +47,10 @@ namespace FilmesAPI.Controllers
         [HttpGet("{id}")] //Representa que o ID vai ser passado na URL da requisição, ex.: localhost:5000/controller/id onde controller é o primeiro nome da classe
         public IActionResult RecuperaFilmesPorId( int id) //O tipo IActionResult possibilita retornar os status de Ok, NotFound....
         {
-            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
-            //return filmes.FirstOrDefault(x => x.Id == id);
-
-            if(filme != null)
+            ReadFilmeDto readDto = _filmeService.RecuperaFilmesPorId(id);
+            if(readDto != null)
             {
-                ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);
-
-                return Ok(filmeDto);
+                return Ok(readDto);
             }
             return NotFound();
         }
@@ -76,37 +58,30 @@ namespace FilmesAPI.Controllers
         [HttpPut("{id}")] //VERBO DE ATUALIZAÇÃO
         public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
-            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+            UpdateFilmeDto readDto = _filmeService.AtualizaFilme(id, filmeDto);
 
-            if(filme == null)
+            if(readDto == null)
             {
                 return NotFound();
             }
 
-            _mapper.Map(filmeDto, filme); //CONVRETENDO 2 OBJETOS ENTRE SI ( Sobrescrevendo as informações de filmeDto para o filme)
+            return NoContent(); // BOA PRATICA QUANDO ATULIZAR DADOS, RETORNAR NoContent();
+            
 
             /*  filme.Titulo  = filmeDto.Titulo;
                 filme.Genero  = filmeDto.Genero;
                 filme.Duracao = filmeDto.Duracao;   //PASSANDO OS DADOS ATUALIZADOS DO FILME - ONDE FOI ATUALIZADO PELO USO DO AutoMapper FEITO ACIMA
                 filme.Diretor = filmeDto.Diretor;
             */
-
-            _context.SaveChanges();
-
-            return NoContent(); // BOA PRATICA QUANDO ATULIZAR DADOS, RETORNAR NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeletaFilme(int id)
         {
-            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
-            if(filme == null)
+            if (!_filmeService.DeletaFilme(id))
             {
                 return NotFound();
-            }
-            _context.Remove(filme);
-            _context.SaveChanges();
-
+            }                   
             return NoContent();
         }
     }
