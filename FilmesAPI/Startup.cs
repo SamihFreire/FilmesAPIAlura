@@ -28,18 +28,23 @@ namespace FilmesAPI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmesAPI", Version = "v1" });
-            });
+        {            
             services.AddDbContext<AppDbContext>(option => option.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("FilmeConnection"))); //CONFIGURANDO O CAMINHO DA STRING DE CONEXÃO / UseLazyLoadingProxies() responsavel na consulta das informações que existentes na relação de uma tabela com outra/ É NECESSARIO DEFINIR O MÉTODO COMO VIRTUAL PARA Q O LAZY REALLIZE O OVERRIDE
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //UTILIZANDO O DOMINIO DA APLICAÇÃO COM AutoMapper (Onde este realiza uma conversão automática de um tipo para o outro)(FilmeProfile.cs foi configurado a CreateMap());
             
+            
+            services.AddScoped<FilmeService, FilmeService>(); //INSTANCIADO O FilmeService para o proprio FilmeService
+            
+            //INJEÇÃO DE DEPENDENCIAS
             //NECESSARIO ADICIONAR O services.AddScoped<ControllerService, ControllerService>(), PARA IDENTIFICAR A COMUNICAÇÃO ENTRE CLASSE CONTROLLER E SERVICES
-            services.AddScoped<FilmeService, FilmeService>();
             services.AddScoped<CinemaService, CinemaService>();
+            services.AddScoped<EnderecoService, EnderecoService>();
+            services.AddScoped<SessaoService, SessaoService>();
+            
+            services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //UTILIZANDO O DOMINIO DA APLICAÇÃO COM AutoMapper (Onde este realiza uma conversão automática de um tipo para o outro)(FilmeProfile.cs foi configurado a CreateMap());
+
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,8 +53,6 @@ namespace FilmesAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FilmesAPI v1"));
             }
 
             app.UseHttpsRedirection();

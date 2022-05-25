@@ -2,6 +2,8 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +26,6 @@ namespace FilmesAPI.Services
             Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
             _context.Cinemas.Add(cinema);
             _context.SaveChanges();
-
             return _mapper.Map<ReadCinemaDto>(cinema);
         }
 
@@ -48,7 +49,7 @@ namespace FilmesAPI.Services
             return readDto;
         }
 
-        internal ReadCinemaDto RecuperaCinemasPorId(int id)
+        public ReadCinemaDto RecuperaCinemasPorId(int id)
         {
             Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
             if (cinema != null)
@@ -60,30 +61,30 @@ namespace FilmesAPI.Services
             return null;
         }
 
-        internal bool AtualizaCinema(int id, UpdateCinemaDto cinemaDto)
+        public Result AtualizaCinema(int id, UpdateCinemaDto cinemaDto)
         {
             Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
             if (cinema == null)
             {
-                return false;
+                return Result.Fail("Cinema não encontrado");
             }
             _mapper.Map(cinemaDto, cinema);
             _context.SaveChanges();
 
-            return true;
+            return Result.Ok();
         }
 
-        public bool DeletaCinema(int id)
+        public Result DeletaCinema(int id)
         {
             Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
             if (cinema == null)
             {
-                return false;
+                return Result.Fail("Cinema nao encontrado");
             }
             _context.Remove(cinema);
             _context.SaveChanges();
 
-            return true;
+            return Result.Ok();
         }
     }
 }

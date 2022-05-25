@@ -4,6 +4,7 @@ using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using FilmesAPI.Services;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,14 +23,12 @@ namespace FilmesAPI.Controllers
         {
             _cinemaService = cinemaService;
         }
- 
+
         [HttpPost]
         public IActionResult AdicionaCinema([FromBody] CreateCinemaDto cinemaDto)
         {
             ReadCinemaDto readDto = _cinemaService.AdicionaCinema(cinemaDto);
-
-
-            return CreatedAtAction(nameof(RecuperaCinemasPorId), new { Id = readDto.Id, readDto });
+            return CreatedAtAction(nameof(RecuperaCinemasPorId), new { Id = readDto.Id }, readDto);
         }
 
         [HttpGet]
@@ -61,7 +60,8 @@ namespace FilmesAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult AtualizaCinema(int id, [FromBody] UpdateCinemaDto cinemaDto)
         {
-            if(!_cinemaService.AtualizaCinema(id, cinemaDto))
+            Result resultado = _cinemaService.AtualizaCinema(id, cinemaDto);
+            if (resultado.IsFailed)
             {
                 return NotFound();
             }
@@ -72,7 +72,8 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletaCinema(int id)
         {
-            if (!_cinemaService.DeletaCinema(id))
+            Result resultado = _cinemaService.DeletaCinema(id);
+            if (resultado.IsFailed)
             {
                 return NotFound();
             }

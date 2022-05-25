@@ -3,6 +3,7 @@ using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using FilmesAPI.Services;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPost] //Verbo de criação
-        public IActionResult AdionaFilme([FromBody] CreateFilmeDto filmeDto) // [FROMBODY] indica que o filme vem atraves do corpo da requisição
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto) // [FROMBODY] indica que o filme vem atraves do corpo da requisição
         {
             ReadFilmeDto readDto = _filmeService.AdicionaFilme(filmeDto);
 
@@ -58,16 +59,14 @@ namespace FilmesAPI.Controllers
         [HttpPut("{id}")] //VERBO DE ATUALIZAÇÃO
         public IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto)
         {
-            UpdateFilmeDto readDto = _filmeService.AtualizaFilme(id, filmeDto);
-
-            if(readDto == null)
+            Result resultado = _filmeService.AtualizaFilme(id, filmeDto); //Utilizando o pacote FluenteResult
+             
+            if(resultado.IsFailed)
             {
                 return NotFound();
             }
-
             return NoContent(); // BOA PRATICA QUANDO ATULIZAR DADOS, RETORNAR NoContent();
             
-
             /*  filme.Titulo  = filmeDto.Titulo;
                 filme.Genero  = filmeDto.Genero;
                 filme.Duracao = filmeDto.Duracao;   //PASSANDO OS DADOS ATUALIZADOS DO FILME - ONDE FOI ATUALIZADO PELO USO DO AutoMapper FEITO ACIMA
@@ -78,7 +77,8 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletaFilme(int id)
         {
-            if (!_filmeService.DeletaFilme(id))
+            Result resultado = _filmeService.DeletaFilme(id);
+            if (resultado.IsFailed)
             {
                 return NotFound();
             }                   

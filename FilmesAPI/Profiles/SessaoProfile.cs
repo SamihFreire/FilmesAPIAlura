@@ -17,6 +17,12 @@ namespace FilmesAPI.Profiles
                 .ForMember(dto => dto.HorarioDeInicio, opts => opts
                 .MapFrom(dto => 
                 dto.HorarioDeEncerramento.AddMinutes(dto.Filme.Duracao * (-1))));
+
+            /*
+            .ForMember(dto => dto.HorarioDeInicio, opts => opts
+            .MapFrom(dto =>
+            dto.HorarioDeEncerramento.AddMinutes(dto.Filme.Duracao * (-1))));
+            */
         }
 
     }

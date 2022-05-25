@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,30 +66,30 @@ namespace FilmesAPI.Services
             return null;
         }
 
-        internal UpdateFilmeDto AtualizaFilme(int id, UpdateFilmeDto filmeDto)
+        public Result AtualizaFilme(int id, UpdateFilmeDto filmeDto)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if(filme == null)
             {
-                return null;
+                return Result.Fail("Filme nao encontrado");
             }
 
             _mapper.Map(filmeDto, filme); //CONVRETENDO 2 OBJETOS ENTRE SI ( Sobrescrevendo as informações de filmeDto para o filme)
             _context.SaveChanges();
 
-            return filmeDto;
+            return Result.Ok();
         }
 
-        internal bool DeletaFilme(int id)
+        public Result DeletaFilme(int id)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if(filme == null)
             {
-                return false;
+                return Result.Fail("Filme nao encontrado");
             }
             _context.Remove(filme);
             _context.SaveChanges();
-            return true;
+            return Result.Ok();
         }
     }
 }
