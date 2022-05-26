@@ -30,12 +30,12 @@ namespace FilmesAPI
         public void ConfigureServices(IServiceCollection services)
         {            
             services.AddDbContext<AppDbContext>(option => option.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("FilmeConnection"))); //CONFIGURANDO O CAMINHO DA STRING DE CONEXÃO / UseLazyLoadingProxies() responsavel na consulta das informações que existentes na relação de uma tabela com outra/ É NECESSARIO DEFINIR O MÉTODO COMO VIRTUAL PARA Q O LAZY REALLIZE O OVERRIDE
-            
-            
-            services.AddScoped<FilmeService, FilmeService>(); //INSTANCIADO O FilmeService para o proprio FilmeService
+                       
             
             //INJEÇÃO DE DEPENDENCIAS
             //NECESSARIO ADICIONAR O services.AddScoped<ControllerService, ControllerService>(), PARA IDENTIFICAR A COMUNICAÇÃO ENTRE CLASSE CONTROLLER E SERVICES
+            
+            services.AddScoped<FilmeService, FilmeService>(); //INSTANCIADO O FilmeService para o proprio FilmeService
             services.AddScoped<CinemaService, CinemaService>();
             services.AddScoped<EnderecoService, EnderecoService>();
             services.AddScoped<SessaoService, SessaoService>();
