@@ -35,7 +35,17 @@ namespace UsuariosApi
                 .AddEntityFrameworkStores<UserDbContext>();
 
 
+            // Resposanvel por redefinit os requisitos de uma senha do identity
+            /* services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 8;
+            }); */
+
             services.AddScoped<CadastroService, CadastroService>();
+            services.AddScoped<LoginService, LoginService>();
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //MAPEAMENTO DO AutoMapper IMPORTANTE!!!!!!
         }
